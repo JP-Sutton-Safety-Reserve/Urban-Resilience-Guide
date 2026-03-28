@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -332,10 +331,10 @@ const TERMS_URL_DEFAULT      = 'https://jpsutton.com/policies/terms-of-service';
    Must be an https:// address — file:// URLs won't work on phones.
    Example: 'https://yoursite.com/emergency_prep.html'
    ─────────────────────────────────────────────────────────────── */
-const BASE_URL_DEFAULT       = 'https://fantastic-entremet-7788e3.netlify.app/emergency_prep_v13.html';
+const BASE_URL_DEFAULT       = 'https://allstevejps.github.io/Urban-Resilience-Guide/';
 const AI_QUERY_DATE_DEFAULT  = 'March 20';
 
-const ACTIVATION_CARD_TEMPLATE_DEFAULT = `An app will guide you through a short setup — about 5 minutes — to build your personalized pages. The AI Real Time Situational Analysis can only be downloaded to your phone; all other content can be printed and/or downloaded. Printed materials can be inserted in the slots provided in this guide.
+const ACTIVATION_CARD_TEMPLATE_DEFAULT = `An app will guide you through a short setup — about 5 minutes — to build your personalized pages. The AI Real Time Situational Analysis can be saved directly to your phone; all other content can be printed and/or downloaded. Printed materials can be inserted in the slots provided in this guide.
 
 For help, contact support@jpsutton.com`;
 
@@ -831,7 +830,7 @@ function initApp(){
   // Check for admin access via #admin hash (case-insensitive) OR ?admin=1 URL param
   const _iap=new URLSearchParams(window.location.search);
   if(window.location.hash.toLowerCase()==='#admin'||_iap.get('admin')==='1'){S.showAdmin=true;}
-  try{const _p=new URLSearchParams(window.location.search),_c=_p.get('code');if(_c)S.activationCode=_c.trim().toUpperCase();}catch(e){}
+  // NOTE: ?code= URL param is intentionally NOT auto-filled — user must enter their code manually
 
   const saved=getSavedSession();
   if(saved&&saved.legalAccepted){
@@ -1461,7 +1460,7 @@ function renderAdminCodes(){
         <input class="admin-input" id="newCodeQrUrl" value="${esc(S.newCodeQrUrl)}" placeholder="https://yourapp.com?code=...">
       </div>
       <div class="admin-fgroup">
-        <label class="admin-label">Center Image / Replace QR <span style="color:rgba(255,255,255,.35);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">— replaces the QR with your image; saved permanently across sessions</span></label>
+        <label class="admin-label">Center Logo (optional) <span style="color:rgba(255,255,255,.35);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">— composited into the center of the QR code; saved permanently across sessions</span></label>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px">
           <label style="cursor:pointer"><span class="admin-btn admin-btn-outline" style="display:inline-flex;align-items:center;gap:5px;pointer-events:none">📷 Upload Image</span><input type="file" id="codeImageUpload" accept="image/*" style="display:none"></label>
           ${S.newCodeImageData?`<div style="width:54px;height:54px;border-radius:8px;overflow:hidden;border:2px solid rgba(74,158,232,.5);background:white;box-shadow:0 0 0 3px rgba(74,158,232,.15)"><img src="${S.newCodeImageData}" style="width:100%;height:100%;object-fit:contain"></div><button class="admin-btn admin-btn-danger" id="btnClearCodeImg" style="font-size:11px;padding:5px 9px">✕ Remove</button><span style="font-size:10px;color:rgba(74,158,232,.8)">✓ Saved — persists across sessions</span>`:`<span style="font-size:11px;color:rgba(255,255,255,.3)">No image — standard QR code will print</span>`}
@@ -1581,7 +1580,7 @@ function renderFinal(){
     <div style="background:var(--blue-light);border:2px solid #4A6FA5;border-radius:12px;padding:14px 16px;margin-bottom:18px">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#2C4A6E;margin-bottom:8px">📋 Step 2 — When Something Happens (Later)</div>
       <div style="font-size:13px;font-weight:700;color:#2C4A6E;margin-bottom:6px">Open the saved file and attach it to an AI system.</div>
-      <div style="font-size:12px;color:#2C3347;line-height:1.65;margin-bottom:10px">Open the query you saved on your phone. In a third-party AI system (e.g., ChatGPT, Claude, Gemini), <strong>attach the file</strong>, then add:</div>
+      <div style="font-size:12px;color:#2C3347;line-height:1.65;margin-bottom:10px">In Claude, Gemini, or ChatGPT, tap the attachment icon and select this file. Then add:</div>
       <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;padding-left:4px">
         <div style="display:flex;gap:7px;font-size:12px;color:#2C3347;line-height:1.55"><span style="color:#4A6FA5;flex-shrink:0">•</span><span>The unusual event or situation (e.g., "smell of smoke," "police activity," "power outage")</span></div>
         <div style="display:flex;gap:7px;font-size:12px;color:#2C3347;line-height:1.55"><span style="color:#4A6FA5;flex-shrink:0">•</span><span>Your location</span></div>
@@ -1593,9 +1592,9 @@ function renderFinal(){
       </div>
     </div>
     <button class="btn btn-primary" id="btnDownloadAI" style="width:100%;font-size:15px;padding:14px;border-radius:12px;background:#2C4A6E;box-shadow:0 3px 12px rgba(44,74,110,.3);margin-bottom:10px">
-      📱 Download AI Query Prompt to Phone
+      📤 Save AI Query to Phone
     </button>
-    ${S.aiDownloaded?`<div style="background:var(--green-light);border:1.5px solid #9EC8B4;border-radius:9px;padding:9px 13px;font-size:12px;color:#1A5240;font-weight:600;text-align:center;margin-bottom:14px">✓ Downloaded — save it somewhere easy to find</div>`:`<div style="font-size:11px;color:var(--text-light);text-align:center;margin-bottom:14px">When the PDF opens, tap the share icon and choose <strong>Save to Files</strong> or <strong>Add to Home Screen</strong></div>`}
+    ${S.aiDownloaded?`<div style="background:var(--green-light);border:1.5px solid #9EC8B4;border-radius:9px;padding:9px 13px;font-size:12px;color:#1A5240;font-weight:600;text-align:center;margin-bottom:14px">✓ Saved! Find it in your Files app → Downloads. In an emergency: open Claude, Gemini, or ChatGPT → tap the attachment icon → select this file</div>`:`<div style="font-size:11px;color:var(--text-light);text-align:center;margin-bottom:14px">On iPhone: choose an app to send it to directly (Claude, Gemini, etc.), or tap <strong>Save to Files</strong> to store it</div>`}
     <div style="border-top:1px solid var(--border);padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px">
       <div style="font-size:11px;color:var(--text-light)">Version: ${aiDate}</div>
       <button class="btn btn-primary" id="btnFinalAINext" style="background:#1A5240;box-shadow:0 2px 8px rgba(26,82,64,.25)">Next: Your Other Documents →</button>
@@ -1781,44 +1780,43 @@ function build4DocsHtml(){
   return{srHtml,commHtml,essHtml,disruptionHtml};
 }
 
-/* Download AI Analysis — saves as .doc (Word-compatible) so all AI engines accept it */
-function doDownloadAI(){
+/* AI Analysis — share sheet on mobile (attach directly to AI app), download fallback on desktop */
+async function doDownloadAI(){
   const aiDate=getAIQueryDate();
-  // Build plain-text body from the AI query text for maximum compatibility
   const rawText=load(SK.aiQueryText,AI_QUERY_DEFAULT);
-  const textBody=rawText.split('\n').map(line=>{
-    const t=line.trim();
-    if(!t)return'<w:p><w:pPr><w:spacing w:after="0"/></w:pPr></w:p>';
-    const isHeading=/^\d+\.\s+[A-Z]/.test(t)&&t.length<80;
-    const isBullet=t.startsWith('•')||t.startsWith('-');
-    const text=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    if(isHeading)return`<w:p><w:pPr><w:pStyle w:val="Heading2"/><w:spacing w:before="200" w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="2C4A6E"/></w:rPr><w:t xml:space="preserve">${text}</w:t></w:r></w:p>`;
-    if(isBullet)return`<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="60"/></w:pPr><w:r><w:t xml:space="preserve">• ${text.replace(/^[•\-]\s*/,'')}</w:t></w:r></w:p>`;
-    return`<w:p><w:pPr><w:spacing w:after="80"/></w:pPr><w:r><w:t xml:space="preserve">${text}</w:t></w:r></w:p>`;
-  }).join('');
-  const docxml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<?mso-application progid="Word.Document"?>
-<w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml"
-  xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint"
-  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-<w:body>
-<w:p><w:pPr><w:spacing w:after="40"/></w:pPr>
-  <w:r><w:rPr><w:b/><w:sz w:val="32"/><w:color w:val="2C4A6E"/></w:rPr><w:t>AI Real Time Situational Analysis</w:t></w:r>
-</w:p>
-<w:p><w:pPr><w:spacing w:after="40"/></w:pPr>
-  <w:r><w:rPr><w:sz w:val="20"/><w:color w:val="8E95A3"/></w:rPr><w:t>Version: ${aiDate} · Prepared for: ${esc(S.userName)}</w:t></w:r>
-</w:p>
-<w:p><w:pPr><w:spacing w:after="40"/></w:pPr>
-  <w:r><w:rPr><w:sz w:val="20"/><w:color w:val="6A5100"/></w:rPr><w:t>IMPORTANT: This template is for informational use only. Not an emergency service. Always follow official authorities.</w:t></w:r>
-</w:p>
-<w:p><w:pPr><w:spacing w:after="120"/></w:pPr><w:r><w:t></w:t></w:r></w:p>
-${textBody}
-</w:body></w:wordDocument>`;
-  const blob=new Blob([docxml],{type:'application/msword'});
+  const fileName=`AI-Situational-Analysis-${(S.userName||'Safety-Reserve').replace(/\s+/g,'-')}.txt`;
+
+  // Plain text file — every AI app (Claude, Gemini, ChatGPT) accepts txt attachments
+  const fileContent=`AI Real Time Situational Analysis
+Version: ${aiDate} · Prepared for: ${S.userName}
+
+IMPORTANT: This template is for informational use only. Not an emergency service. Always follow official authorities.
+
+` + rawText;
+
+  const blob=new Blob([fileContent],{type:'text/plain'});
+  const file=new File([blob],fileName,{type:'text/plain'});
+
+  // On iOS/Android: show native share sheet — user can attach directly to Claude, Gemini, etc.
+  if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({
+        title:'AI Situational Analysis — Safety Reserve',
+        text:'Your AI Real Time Situational Analysis prompt. Attach this file to Claude, Gemini, or ChatGPT.',
+        files:[file]
+      });
+      S.aiDownloaded=true;render();
+      return;
+    }catch(e){
+      if(e.name==='AbortError')return; // user cancelled share sheet — do nothing
+      // Share failed — fall through to download
+    }
+  }
+
+  // Desktop fallback: standard download
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;
-  a.download=`ai-query-prompt-${(S.userName||'safety').replace(/\s+/g,'-').toLowerCase()}.doc`;
+  a.href=url;a.download=fileName;
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url),3000);
   S.aiDownloaded=true;render();
@@ -2280,24 +2278,27 @@ initApp();
 async function generateQRDataURL(text,centerImgSrc,size){
   return new Promise(resolve=>{
     try{
-      const qr=qrcode(0,'H');
+      const qr=qrcode(0,'M');
       qr.addData(text);qr.make();
       const mc=qr.getModuleCount();
-      const pad=Math.round(size*0.04),qrA=size-pad*2,cell=qrA/mc;
+      // 4-module quiet zone on each side (QR spec minimum)
+      const quietZone=4;
+      const cell=size/(mc+quietZone*2);
+      const offset=quietZone*cell;
       const canvas=document.createElement('canvas');
       canvas.width=size;canvas.height=size;
       const ctx=canvas.getContext('2d');
       ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,size,size);
-      ctx.fillStyle='#2C3347';
+      ctx.fillStyle='#000000';
       for(let r=0;r<mc;r++)for(let c=0;c<mc;c++)if(qr.isDark(r,c))
-        ctx.fillRect(Math.round(pad+c*cell),Math.round(pad+r*cell),Math.ceil(cell)+1,Math.ceil(cell)+1);
+        ctx.fillRect(offset+c*cell,offset+r*cell,cell,cell);
       if(!centerImgSrc){resolve(canvas.toDataURL('image/png'));return;}
       const img=new Image();
       img.onload=()=>{
-        const iw=qrA*0.22,ix=pad+(qrA-iw)/2,iy=pad+(qrA-iw)/2;
+        const iw=cell*mc*0.22,ix=size/2-iw/2,iy=size/2-iw/2;
         ctx.fillStyle='#FFFFFF';
-        ctx.beginPath();ctx.arc(size/2,size/2,iw/2+10,0,Math.PI*2);ctx.fill();
-        ctx.save();ctx.beginPath();ctx.arc(size/2,size/2,iw/2+2,0,Math.PI*2);ctx.clip();
+        ctx.beginPath();ctx.arc(size/2,size/2,iw/2+cell*2,0,Math.PI*2);ctx.fill();
+        ctx.save();ctx.beginPath();ctx.arc(size/2,size/2,iw/2+cell,0,Math.PI*2);ctx.clip();
         ctx.drawImage(img,ix,iy,iw,iw);ctx.restore();
         resolve(canvas.toDataURL('image/png'));
       };
@@ -2317,27 +2318,48 @@ async function doPrintCode(rec){
   const gsParagraphs=(rec.adminText||'').split('\n').map(l=>l.trim()).filter(Boolean)
     .map(l=>`<p style="font-size:12.5px;color:#3A4560;line-height:1.7;margin:0 0 7px">${esc(l)}</p>`).join('');
 
-  // Determine what to show in the visual panel (image or QR)
+  // Generate QR code — with optional center logo overlay
   let visualHtml='';
-  if(rec.imageData){
-    visualHtml=`<img src="${rec.imageData}" style="width:100%;height:100%;object-fit:contain;display:block" alt="Brand image">`;
-  } else {
-    // Generate QR code
-    try{
-      const qr=qrcode(0,'H');
-      qr.addData(qrUrl);qr.make();
-      const mc=qr.getModuleCount(),size=380;
-      const pad=Math.round(size*0.04),qrA=size-pad*2,cell=qrA/mc;
-      const cv=document.createElement('canvas');cv.width=size;cv.height=size;
-      const ctx=cv.getContext('2d');
-      ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,size,size);
-      ctx.fillStyle='#2C3347';
-      for(let r=0;r<mc;r++)for(let c=0;c<mc;c++)if(qr.isDark(r,c))
-        ctx.fillRect(Math.round(pad+c*cell),Math.round(pad+r*cell),Math.ceil(cell)+1,Math.ceil(cell)+1);
-      visualHtml=`<img src="${cv.toDataURL('image/png')}" style="width:100%;height:100%;object-fit:contain;display:block" alt="Scan to activate">`;
-    }catch(e){
-      visualHtml=`<span style="font-size:11px;color:#C0C8D8;padding:10px">QR unavailable</span>`;
+  try{
+    // Use H (30%) error correction so center logo can safely obscure ~15% of modules
+    const ecLevel = rec.imageData ? 'H' : 'M';
+    const qr=qrcode(0, ecLevel);
+    qr.addData(qrUrl);qr.make();
+    const mc=qr.getModuleCount(), size=380;
+    const quietZone=4;
+    const cell=size/(mc+quietZone*2);
+    const offset=quietZone*cell;
+    const cv=document.createElement('canvas');cv.width=size;cv.height=size;
+    const ctx=cv.getContext('2d');
+    ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,size,size);
+    ctx.fillStyle='#000000';
+    for(let r=0;r<mc;r++)for(let c=0;c<mc;c++)if(qr.isDark(r,c))
+      ctx.fillRect(offset+c*cell,offset+r*cell,cell,cell);
+
+    if(rec.imageData){
+      // Composite brand logo into center — ~22% of QR area (safe for H-level ECC)
+      const logoSize = cell*mc*0.22;
+      const cx = size/2, cy = size/2, radius = logoSize/2;
+      // White circle backing
+      ctx.fillStyle='#FFFFFF';
+      ctx.beginPath();ctx.arc(cx,cy,radius+cell*1.5,0,Math.PI*2);ctx.fill();
+      const img=new Image();
+      await new Promise(res=>{
+        img.onload=()=>{
+          ctx.save();
+          ctx.beginPath();ctx.arc(cx,cy,radius+cell*0.5,0,Math.PI*2);ctx.clip();
+          ctx.drawImage(img,cx-radius,cy-radius,logoSize,logoSize);
+          ctx.restore();
+          res();
+        };
+        img.onerror=res;
+        img.src=rec.imageData;
+      });
     }
+
+    visualHtml=`<img src="${cv.toDataURL('image/png')}" style="width:100%;height:100%;display:block" alt="Scan to activate">`;
+  }catch(e){
+    visualHtml=`<span style="font-size:11px;color:#C0C8D8;padding:10px">QR unavailable</span>`;
   }
 
   const orderLine=rec.orderNumber?`<span style="font-size:10px;color:#8E95A3">Order #${esc(rec.orderNumber)}</span>`:'';
@@ -2377,7 +2399,7 @@ body{font-family:'Sora',sans-serif;background:#F2F4F8;min-height:100vh;display:f
 
 /* Visual + code side by side */
 .qr-code-row{display:flex;gap:18px;align-items:flex-start;margin-bottom:16px}
-.visual-box{flex-shrink:0;width:150px;height:150px;border-radius:12px;overflow:hidden;border:2px solid #C8D4E8;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(44,74,110,.12)}
+.visual-box{flex-shrink:0;width:150px;height:150px;border-radius:12px;border:2px solid #C8D4E8;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(44,74,110,.12);padding:4px}.visual-box img{width:100%;height:100%;display:block}
 .code-side{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px}
 .code-eyebrow{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8E95A3;margin-bottom:3px}
 .code-box{background:white;border:2.5px solid #2C4A6E;border-radius:12px;padding:12px 16px;display:inline-block;box-shadow:0 2px 12px rgba(44,74,110,.14)}
@@ -2475,7 +2497,7 @@ body{font-family:'Sora',sans-serif;background:#F2F4F8;min-height:100vh;display:f
           </div>
         </div>
         <div class="steps-list">
-          <div class="step-line"><div class="step-num">1</div><span>Open your phone's camera and scan the image to the left</span></div>
+          <div class="step-line"><div class="step-num">1</div><span>Open your phone's camera and scan the QR code to the left</span></div>
           <div class="step-line"><div class="step-num">2</div><span>Enter the code above when prompted</span></div>
           <div class="step-line"><div class="step-num">3</div><span>Follow the guided setup (~5 min)</span></div>
         </div>
@@ -2500,3 +2522,4 @@ body{font-family:'Sora',sans-serif;background:#F2F4F8;min-height:100vh;display:f
 </script>
 </body>
 </html>
+

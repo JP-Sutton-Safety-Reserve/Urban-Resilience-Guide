@@ -332,7 +332,7 @@ const TERMS_URL_DEFAULT      = 'https://jpsutton.com/policies/terms-of-service';
    Must be an https:// address — file:// URLs won't work on phones.
    Example: 'https://yoursite.com/emergency_prep.html'
    ─────────────────────────────────────────────────────────────── */
-const BASE_URL_DEFAULT       = 'https://allstevejps.github.io/Urban-Resilience-Guide/';
+const BASE_URL_DEFAULT       = 'https://jp-sutton-safety-reserve.github.io/Urban-Resilience-Guide/';
 const AI_QUERY_DATE_DEFAULT  = 'March 20';
 
 const ACTIVATION_CARD_TEMPLATE_DEFAULT = `An app will guide you through a short setup — about 5 minutes — to build your personalized pages. The AI Real Time Situational Analysis can be saved directly to your phone; all other content can be printed and/or downloaded. Printed materials can be inserted in the slots provided in this guide.
@@ -1520,7 +1520,7 @@ function renderStopBar(){
   </div></div>`;
 }
 function renderMasterProgress(prog){
-  const phases=[{label:'1 · Location Scenarios',key:'p1',phase:1},{label:'2 · Contacts',key:'p2',phase:2},{label:'3 · Pre-Plan Essentials',key:'p3',phase:3}];
+  const phases=[{label:'1 · Location Scenarios',key:'p1',phase:1},{label:'2 · Comm Plan',key:'p2',phase:2},{label:'3 · Pre-Plan Essentials',key:'p3',phase:3}];
   return`<div class="master-progress"><div class="phase-pills">${phases.map(ph=>{
     const cls=S.phase===ph.phase?'active':(S.phase>ph.phase?'done':'');
     const fill=S.phase>ph.phase?100:(S.phase===ph.phase?prog[ph.key]:0);
@@ -1984,20 +1984,8 @@ function attachHandlers(){
   });
 
   /* FINAL SCREEN */
-  bc('btnCloseWindow',()=>{
-    window.close();
-    setTimeout(()=>{
-      const btn=document.getElementById('btnCloseWindow');
-      if(btn&&document.body){showCloseFallback();}
-    },400);
-  });
-  bc('btnCloseAfterAction',()=>{
-    window.close();
-    setTimeout(()=>{
-      const btn=document.getElementById('btnCloseAfterAction');
-      if(btn&&document.body){showCloseFallback();}
-    },400);
-  });
+  bc('btnCloseWindow',()=>{ showCloseFallback(); });
+  bc('btnCloseAfterAction',()=>{ showCloseFallback(); });
 
   /* DISRUPTION INSIGHTS view button */
   bc('btnRevAI',()=>{S.showAIView=true;render();});
@@ -2182,6 +2170,9 @@ function attachHandlers(){
     if(!S.newCodeStr)return;
     const _now=new Date(),_exp=new Date(_now);
     _exp.setFullYear(_exp.getFullYear()+1);
+    // Persist the base URL so future codes auto-fill with the same URL
+    const _qrBase=S.newCodeQrUrl.split('?')[0];
+    if(_qrBase)store(SK.baseUrl,_qrBase);
     const rec={code:S.newCodeStr,orderNumber:S.newOrderNumber.trim()||'',createdAt:_now.toISOString(),expiresAt:_exp.toISOString(),cancelled:false,adminText:S.newCodeAdminText||'',imageData:S.newCodeImageData||null,qrUrl:S.newCodeQrUrl||window.location.href.split('?')[0]+'?code='+S.newCodeStr,activations:[]};
     const _all=loadCodes();_all.push(rec);saveCodes(_all);
     S.adminSaveMsg='Code '+rec.code+(rec.orderNumber?' (Order #'+rec.orderNumber+')':'')+' saved.';

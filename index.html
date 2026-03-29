@@ -682,6 +682,7 @@ const SK = {
   recoveryKey:   'jps_recovery_key_v1',
   baseUrl:       'jps_base_url',
   questionLogic: 'jps_question_logic_v1',
+  pageSource:    'jps_page_source_v1',
 };
 
 function store(key,val){try{localStorage.setItem(key,typeof val==='string'?val:JSON.stringify(val));}catch(e){}}
@@ -1190,6 +1191,16 @@ function initApp(){
     S.appFlow='activation';
   }
   applyStoredQuestionLogic();
+  // Cache raw page source for Export App feature (runs silently in background)
+  (async()=>{
+    const urls=[window.location.href, window.location.origin+window.location.pathname,'./index.html','index.html'];
+    for(const u of urls){
+      try{
+        const r=await fetch(u,{cache:'no-store'});
+        if(r.ok){const t=await r.text();if(t.includes('BAKED_CODES')){store(SK.pageSource,t);break;}}
+      }catch(e){}
+    }
+  })();
   render();
 }
 
@@ -2553,16 +2564,24 @@ function attachHandlers(){
     const _xc=loadCodes(),_xn=new Date();
     const slim=_xc.filter(r=>!r.cancelled&&new Date(r.expiresAt)>_xn).map(r=>({code:r.code,expiresAt:r.expiresAt,cancelled:false}));
     if(!slim.length){alert('No active codes to bake in. Generate at least one code first.');return;}
-    // Fetch the actual HTML source — far more reliable than outerHTML serialization
-    let rawSrc;
-    try{
-      const resp=await fetch(window.location.href,{cache:'no-store'});
-      rawSrc=await resp.text();
-    }catch(e){
-      alert('Could not fetch page source. Make sure you are on a live https:// URL (not a local file), then try again.');return;
+    // 1. Try localStorage cache (populated on page load)
+    let rawSrc=load(SK.pageSource,'');
+    // 2. If cache cold or stale, try multiple fetch strategies
+    if(!rawSrc||!rawSrc.includes('BAKED_CODES')){
+      const urls=[window.location.href, window.location.origin+window.location.pathname, './index.html', 'index.html'];
+      for(const u of urls){
+        try{
+          const r=await fetch(u,{cache:'no-store'});
+          if(r.ok){const t=await r.text();if(t.includes('BAKED_CODES')){rawSrc=t;store(SK.pageSource,t);break;}}
+        }catch(e){}
+      }
     }
-    const replaced=rawSrc.replace(/const BAKED_CODES = \[.*?\];/s,'const BAKED_CODES = '+JSON.stringify(slim)+';');
-    if(replaced===rawSrc){alert('Could not find BAKED_CODES placeholder in source. Export failed.');return;}
+    if(!rawSrc||!rawSrc.includes('BAKED_CODES')){
+      alert('Export failed: could not retrieve the page source.\n\nPlease open the live GitHub Pages URL in your browser (https://...) and try Export again from there.');return;
+    }
+    const codesJson=JSON.stringify(slim);
+    const replaced=rawSrc.replace(/const BAKED_CODES = \[[\s\S]*?\];/,`const BAKED_CODES = ${codesJson};`);
+    if(replaced===rawSrc){alert('Export failed: BAKED_CODES marker not found in source. Please re-upload the latest index.html and try again.');return;}
     const blob=new Blob([replaced],{type:'text/html'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download='index.html';

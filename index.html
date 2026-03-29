@@ -2344,7 +2344,6 @@ function attachHandlers(){
     const entered=(S.resumeCodeInput||'').trim().toUpperCase();
     const saved=(S.activationCode||'').trim().toUpperCase();
     if(!entered){S.resumeCodeErr='Please enter your activation code.';render();return;}
-    if(entered.length!==6){S.resumeCodeErr='Activation codes are 6 characters. Please check and try again.';render();return;}
     if(entered!==saved){S.resumeCodeErr='Incorrect code. Please check and try again.';render();return;}
     S.resumeCodeErr='';loadSavedMainState();S.appFlow='main';render();
   });
@@ -2608,7 +2607,6 @@ function handleActivateNext(){
   const code=S.activationCode.trim().toUpperCase();
   if(!code){S.activationErr='Please enter your activation code.';render();return;}
   // Length check — codes are 6 characters
-  if(code.length!==6){S.activationErr='Activation codes are 6 characters. Please check and try again.';render();return;}
   const hasBaked=BAKED_CODES.length>0;
   const hasLocal=loadCodes().length>0;
   const rec=getCodeRecord(code);

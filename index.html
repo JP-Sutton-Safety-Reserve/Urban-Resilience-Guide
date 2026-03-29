@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Safety Reserve — Urban Resilience Guide v19</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&amp;family=DM+Serif+Display&amp;display=swap" rel="stylesheet">
 <style>
 :root {
   --blue:#4A6FA5; --blue-light:#EAF0F9; --blue-dark:#2C4A6E;
@@ -254,7 +252,333 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-he
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-<div id="app"></div>
+<div id="app"><div id="adminLayer"><div class="admin-overlay" id="adminOverlay">
+    <div class="admin-panel fade-in">
+      <div class="admin-header">
+        <div>
+          <h1>🔐 Admin Panel</h1>
+          <p>J.P. Sutton Safety Reserve — Content Manager</p>
+        </div>
+        <button class="admin-close" id="btnAdminClose">✕ Close</button>
+      </div>
+      <div class="admin-tabs">
+        <button class="admin-tab " data-tab="welcome">Welcome Page</button><button class="admin-tab " data-tab="safety">Safety Summary</button><button class="admin-tab " data-tab="aiquery">AI Real-Time</button><button class="admin-tab " data-tab="disruption">Disruption Insights</button><button class="admin-tab " data-tab="tosurl">ToS URL</button><button class="admin-tab " data-tab="questionlogic">Question Logic</button><button class="admin-tab " data-tab="password">Password</button><button class="admin-tab " data-tab="records">Records</button><button class="admin-tab active" data-tab="codes">Code Generator</button>
+      </div>
+      <div class="admin-body"><div>
+    <div style="background:rgba(74,111,165,.12);border:1px solid rgba(74,111,165,.3);border-radius:12px;padding:18px;margin-bottom:20px">
+      <div class="admin-section-title" style="margin-bottom:14px;color:rgba(74,158,232,.9)">⚡ GENERATE NEW ACTIVATION CODE</div>
+      <div class="admin-fgroup">
+        <label class="admin-label">📦 Shopify Order Number <span style="color:rgba(255,255,255,.35);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(4-digit order from Shopify)</span></label>
+        <input class="admin-input" id="newOrderNum" value="" placeholder="e.g. 1042" maxlength="6" style="font-size:17px;font-weight:700;letter-spacing:.08em">
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="flex:1">
+          <label class="admin-label" style="margin-bottom:6px">Generated Activation Code</label>
+          <div style="background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.2);border-radius:9px;padding:11px 16px;font-size:22px;font-weight:800;letter-spacing:.2em;color:white;font-family:'Sora',sans-serif">4ZVLEB</div>
+        </div>
+        <button class="admin-btn admin-btn-outline" id="btnGenNewCode" style="flex-shrink:0;margin-top:18px">↻ New Code</button>
+      </div>
+      <div class="admin-fgroup">
+        <label class="admin-label">QR Code URL — scanning opens the app with the code pre-filled</label>
+        <input class="admin-input" id="newCodeQrUrl" value="https://jp-sutton-safety-reserve.github.io/Urban-Resilience-Guide/?code=4ZVLEB" placeholder="https://yourapp.com?code=...">
+      </div>
+      <div class="admin-fgroup">
+        <label class="admin-label">Center Logo (optional) <span style="color:rgba(255,255,255,.35);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">— composited into the center of the QR code; saved permanently across sessions</span></label>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px">
+          <label style="cursor:pointer"><span class="admin-btn admin-btn-outline" style="display:inline-flex;align-items:center;gap:5px;pointer-events:none">📷 Upload Image</span><input type="file" id="codeImageUpload" accept="image/*" style="display:none"></label>
+          <span style="font-size:11px;color:rgba(255,255,255,.3)">No image — standard QR code will print</span>
+        </div>
+      </div>
+      <div class="admin-fgroup">
+        <label class="admin-label">Activation Card "Get Started" Text <span style="color:rgba(255,255,255,.35);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">— editable default template for all new cards</span></label>
+        <textarea class="admin-textarea" id="newCodeAdminText" rows="5" style="min-height:100px">An app will guide you through a short setup — about 5 minutes — to build your personalized pages. The AI Real Time Situational Analysis can be saved directly to your phone; all other content can be printed and/or downloaded. Printed materials can be inserted in the slots provided in this guide.
+
+For help, contact support@jpsutton.com</textarea>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap">
+          <button class="admin-btn admin-btn-outline" id="btnSaveCardTemplate" style="font-size:11px">💾 Save as Default Template</button>
+          
+        </div>
+      </div>
+      <div class="admin-btn-row">
+        <button class="admin-btn admin-btn-primary" id="btnSaveAndPrintCode" style="font-size:13px;padding:12px 22px">🖨️ Save &amp; Print Activation Card</button>
+      </div>
+      
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:16px">
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:11px 6px;text-align:center"><div style="font-size:22px;font-weight:800;color:rgba(255,255,255,.75)">26</div><div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;text-transform:uppercase;letter-spacing:.05em">Total</div></div><div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:11px 6px;text-align:center"><div style="font-size:22px;font-weight:800;color:#93C5FD">26</div><div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;text-transform:uppercase;letter-spacing:.05em">Unused</div></div><div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:11px 6px;text-align:center"><div style="font-size:22px;font-weight:800;color:#6EE7B7">0</div><div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;text-transform:uppercase;letter-spacing:.05em">Activated</div></div><div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:11px 6px;text-align:center"><div style="font-size:22px;font-weight:800;color:#FDBA74">0</div><div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;text-transform:uppercase;letter-spacing:.05em">Multi-Use</div></div><div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:11px 6px;text-align:center"><div style="font-size:22px;font-weight:800;color:#FCA5A5">0</div><div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;text-transform:uppercase;letter-spacing:.05em">Cancelled</div></div>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="admin-btn admin-btn-primary" data-cf="all" style="font-size:11px;padding:5px 11px">All</button><button class="admin-btn admin-btn-outline" data-cf="unused" style="font-size:11px;padding:5px 11px">Unused</button><button class="admin-btn admin-btn-outline" data-cf="activated" style="font-size:11px;padding:5px 11px">Activated</button><button class="admin-btn admin-btn-outline" data-cf="multi" style="font-size:11px;padding:5px 11px">Multi-Use</button><button class="admin-btn admin-btn-outline" data-cf="expired" style="font-size:11px;padding:5px 11px">Expired</button><button class="admin-btn admin-btn-outline" data-cf="cancelled" style="font-size:11px;padding:5px 11px">Cancelled</button>
+    </div>
+    <div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">AD9VP2A2</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 29, 2026 · Exp Mar 29, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="AD9VP2A2" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="AD9VP2A2" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">WL5QBX5Y</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 29, 2026 · Exp Mar 29, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="WL5QBX5Y" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="WL5QBX5Y" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">UACYPDK5</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 29, 2026 · Exp Mar 29, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="UACYPDK5" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="UACYPDK5" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">CPRKXB9Z</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 29, 2026 · Exp Mar 29, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="CPRKXB9Z" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="CPRKXB9Z" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">WSAPBZ56</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 29, 2026 · Exp Mar 29, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="WSAPBZ56" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="WSAPBZ56" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">TP5BEYE9</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 29, 2026 · Exp Mar 29, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="TP5BEYE9" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="TP5BEYE9" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">GDJ6V45R</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="GDJ6V45R" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="GDJ6V45R" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">VC9LJJ8X</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="VC9LJJ8X" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="VC9LJJ8X" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">C48LWCUG</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="C48LWCUG" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="C48LWCUG" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">7Z4CZTRG</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="7Z4CZTRG" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="7Z4CZTRG" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">ZAPLYDEU</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="ZAPLYDEU" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="ZAPLYDEU" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">HQUP8A3V</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="HQUP8A3V" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="HQUP8A3V" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">A37V2JD8</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="A37V2JD8" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="A37V2JD8" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">9U63B2XQ</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="9U63B2XQ" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="9U63B2XQ" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">KMXV2HFF</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 28, 2026 · Exp Mar 28, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="KMXV2HFF" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="KMXV2HFF" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">7LTPLRPW</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 25, 2026 · Exp Mar 25, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="7LTPLRPW" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="7LTPLRPW" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">HM98LEPY</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 25, 2026 · Exp Mar 25, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="HM98LEPY" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="HM98LEPY" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">MZ8C5RCD</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 25, 2026 · Exp Mar 25, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="MZ8C5RCD" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="MZ8C5RCD" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">Y4RES6ME</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 25, 2026 · Exp Mar 25, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="Y4RES6ME" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="Y4RES6ME" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">CUXZ62D6</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 25, 2026 · Exp Mar 25, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="CUXZ62D6" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="CUXZ62D6" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">TSPJFMPP</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 25, 2026 · Exp Mar 25, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="TSPJFMPP" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="TSPJFMPP" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">R5Q37WBG</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 25, 2026 · Exp Mar 25, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="R5Q37WBG" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="R5Q37WBG" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">KLFVYGLL</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 25, 2026 · Exp Mar 25, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="KLFVYGLL" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="KLFVYGLL" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">JPE2T4VY</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 24, 2026 · Exp Mar 24, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="JPE2T4VY" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="JPE2T4VY" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">WS5DNHCL</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 24, 2026 · Exp Mar 24, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="WS5DNHCL" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="WS5DNHCL" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div><div style="border-bottom:1px solid rgba(255,255,255,.07);padding:12px 0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code style="font-size:15px;font-weight:800;letter-spacing:.14em;color:white;font-family:'Sora',sans-serif">AWY6TT9J</code>
+          <span style="font-size:10px;font-weight:700;color:#93C5FD">Unused</span>
+          
+          <span style="font-size:10px;color:rgba(255,255,255,.28);margin-left:auto">Created Mar 23, 2026 · Exp Mar 23, 2027</span>
+          <button class="admin-btn admin-btn-outline" data-printcode="AWY6TT9J" style="font-size:10px;padding:4px 9px;min-height:0">🖨️ Card</button>
+          <button class="admin-btn admin-btn-danger" data-cancelcode="AWY6TT9J" style="font-size:10px;padding:4px 9px;min-height:0">✕ Cancel</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.22);padding-top:5px;padding-left:10px">No activations yet</div>
+      </div></div>
+    <div class="admin-btn-row" style="margin-top:18px">
+      <button class="admin-btn admin-btn-outline" id="btnExportCodesCSV" style="background:rgba(74,158,232,.12);border-color:rgba(74,158,232,.3);color:rgba(74,158,232,.9)">⬇ Export CSV</button>
+      <button class="admin-btn admin-btn-primary" id="btnExportAppWithCodes" style="background:rgba(74,133,112,.3);border:1px solid rgba(74,133,112,.5);color:#6EE7B7">📦 Export App with Codes Baked In</button>
+      <button class="admin-btn admin-btn-danger" id="btnClearAllCodes">🗑 Delete All Codes</button>
+    </div><div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.5">📦 <strong style="color:rgba(255,255,255,.45)">Export App</strong> downloads index.html with all active codes embedded — upload this file to GitHub Pages to enforce code validation.</div>
+  </div></div>
+    </div>
+  </div></div></div>
 
 <!-- TOS OVERLAY -->
 <div id="tosOverlay" style="display:none;position:fixed;inset:0;background:rgba(44,51,71,.72);z-index:9990;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)">
@@ -377,17 +701,36 @@ function getBaseUrl(){
   // Local file — return the configured default
   return BASE_URL_DEFAULT;
 }
+/* =============================================================
+   BAKED CODES — embedded by Admin "Export App" for deployment.
+   Each entry: {code, expiresAt, cancelled}
+   When non-empty, ONLY these codes (plus any in localStorage) are valid.
+   ============================================================= */
+const BAKED_CODES = [{"code":"AWY6TT9J","expiresAt":"2027-03-23T19:14:22.087Z","cancelled":false},{"code":"WS5DNHCL","expiresAt":"2027-03-24T10:50:20.845Z","cancelled":false},{"code":"JPE2T4VY","expiresAt":"2027-03-25T00:06:58.357Z","cancelled":false},{"code":"KLFVYGLL","expiresAt":"2027-03-25T10:52:48.297Z","cancelled":false},{"code":"R5Q37WBG","expiresAt":"2027-03-25T11:15:27.401Z","cancelled":false},{"code":"TSPJFMPP","expiresAt":"2027-03-25T15:28:11.094Z","cancelled":false},{"code":"CUXZ62D6","expiresAt":"2027-03-25T17:55:19.668Z","cancelled":false},{"code":"Y4RES6ME","expiresAt":"2027-03-25T18:18:12.242Z","cancelled":false},{"code":"MZ8C5RCD","expiresAt":"2027-03-25T18:32:02.488Z","cancelled":false},{"code":"HM98LEPY","expiresAt":"2027-03-25T18:42:12.753Z","cancelled":false},{"code":"7LTPLRPW","expiresAt":"2027-03-25T18:49:58.384Z","cancelled":false},{"code":"KMXV2HFF","expiresAt":"2027-03-28T11:26:57.135Z","cancelled":false},{"code":"9U63B2XQ","expiresAt":"2027-03-28T11:28:51.786Z","cancelled":false},{"code":"A37V2JD8","expiresAt":"2027-03-28T12:13:04.462Z","cancelled":false},{"code":"HQUP8A3V","expiresAt":"2027-03-28T12:24:29.444Z","cancelled":false},{"code":"ZAPLYDEU","expiresAt":"2027-03-28T12:34:40.628Z","cancelled":false},{"code":"7Z4CZTRG","expiresAt":"2027-03-28T17:25:09.667Z","cancelled":false},{"code":"C48LWCUG","expiresAt":"2027-03-28T17:30:24.303Z","cancelled":false},{"code":"VC9LJJ8X","expiresAt":"2027-03-28T17:41:29.784Z","cancelled":false},{"code":"GDJ6V45R","expiresAt":"2027-03-28T17:56:33.710Z","cancelled":false},{"code":"TP5BEYE9","expiresAt":"2027-03-29T10:50:38.789Z","cancelled":false},{"code":"WSAPBZ56","expiresAt":"2027-03-29T11:25:44.679Z","cancelled":false},{"code":"CPRKXB9Z","expiresAt":"2027-03-29T11:33:04.552Z","cancelled":false},{"code":"UACYPDK5","expiresAt":"2027-03-29T12:04:49.933Z","cancelled":false},{"code":"WL5QBX5Y","expiresAt":"2027-03-29T12:18:00.167Z","cancelled":false},{"code":"AD9VP2A2","expiresAt":"2027-03-29T13:44:17.645Z","cancelled":false}];
+
+
+function loadCodes(){return loadJson(SK.codes,[]);}
+function saveCodes(arr){store(SK.codes,arr);}
+function genCodeStr(){
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s='';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];
+  return s;
+}
 /* ============================================================
    CODE GENERATOR HELPERS
    ============================================================ */
 function loadCodes(){return loadJson(SK.codes,[]);}
 function saveCodes(arr){store(SK.codes,arr);}
-function genCodeStr(){
-  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let s='';for(let i=0;i<8;i++)s+=c[Math.floor(Math.random()*c.length)];
-  return s;
+function getCodeRecord(code){
+  const upper=code.trim().toUpperCase();
+  // Check localStorage first (admin device has full records)
+  const local=loadCodes().find(r=>r.code===upper);
+  if(local)return local;
+  // Fall back to BAKED_CODES embedded at deploy time
+  const baked=BAKED_CODES.find(r=>r.code===upper);
+  if(baked)return baked;
+  return null;
 }
-function getCodeRecord(code){return loadCodes().find(r=>r.code===code.trim().toUpperCase());}
 function freshNewCode(){
   S.newCodeStr=genCodeStr();
   S.newOrderNumber='';
@@ -1506,8 +1849,9 @@ function renderAdminCodes(){
     }).join('')}</div>
     ${codes.length>0?`<div class="admin-btn-row" style="margin-top:18px">
       <button class="admin-btn admin-btn-outline" id="btnExportCodesCSV" style="background:rgba(74,158,232,.12);border-color:rgba(74,158,232,.3);color:rgba(74,158,232,.9)">⬇ Export CSV</button>
+      <button class="admin-btn admin-btn-primary" id="btnExportAppWithCodes" style="background:rgba(74,133,112,.3);border:1px solid rgba(74,133,112,.5);color:#6EE7B7">📦 Export App with Codes Baked In</button>
       <button class="admin-btn admin-btn-danger" id="btnClearAllCodes">🗑 Delete All Codes</button>
-    </div>`:''}
+    </div><div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.5">📦 <strong style="color:rgba(255,255,255,.45)">Export App</strong> downloads index.html with all active codes embedded — upload this file to GitHub Pages to enforce code validation.</div>`:''}
   </div>`;
 }
 
@@ -1539,7 +1883,7 @@ function renderWorkSchool(){const ol=getOrderedLocs(S.locations);return`<div cla
 function renderWorkBlock(){return`<div class="indent"><div class="fgroup"><label class="flabel">Do you periodically go to an office?</label>${[true,false].map(v=>`<button class="opt ${S.workGoesIn===v?'sel':''}" data-wgi="${v}" style="margin-bottom:7px">${v?'Yes, I go to an office':'No, I work remotely'}</button>`).join('')}${S.errors.workGoesIn?`<div class="err">${esc(S.errors.workGoesIn)}</div>`:''}</div>${S.workGoesIn?`<div class="fgroup"><label class="flabel">Office name</label><input class="finput" id="workName" placeholder='e.g. "Midtown Office"' value="${esc(S.workName)}"></div><div class="fgroup"><label class="flabel">Travel time from home (minutes)</label><input class="finput" id="workMins" type="number" placeholder="e.g. 25" value="${esc(S.workMins)}">${isSusSmall(S.workMins)&&!S.workMinsConf?minsWarn('work',S.workMins):''}</div>${S.errors.work?`<div class="err">${esc(S.errors.work)}</div>`:''}`:''}`;  return`</div>`;}
 function renderSchoolBlock(){return`<div class="indent" style="margin-top:10px"><div class="fgroup"><label class="flabel">Do you periodically go to a campus?</label>${[true,false].map(v=>`<button class="opt ${S.schoolGoesIn===v?'sel':''}" data-sgi="${v}" style="margin-bottom:7px">${v?'Yes, I attend campus':'No, I attend remotely'}</button>`).join('')}${S.errors.schoolGoesIn?`<div class="err">${esc(S.errors.schoolGoesIn)}</div>`:''}</div>${S.schoolGoesIn?`<div class="fgroup"><label class="flabel">Campus name</label><input class="finput" id="schoolName" placeholder='e.g. "Main Campus"' value="${esc(S.schoolName)}"></div><div class="fgroup"><label class="flabel">Travel time from home (minutes)</label><input class="finput" id="schoolMins" type="number" placeholder="e.g. 30" value="${esc(S.schoolMins)}">${isSusSmall(S.schoolMins)&&!S.schoolMinsConf?minsWarn('school',S.schoolMins):''}</div>${S.errors.school?`<div class="err">${esc(S.errors.school)}</div>`:''}`:''}`;  return`</div>`;}
 function minsWarn(pfx,val){const h=parseInt(val);return`<div class="warn-box"><strong>⚠️ Is ${h} correct?</strong><br>Did you mean <strong>${h} minute${h===1?'':`s`}</strong> (very short trip), or <strong>${h} hour${h>1?'s':''} = ${h*60} minutes</strong>?<div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap"><button class="btn btn-sm btn-outline" data-conf-mins="${pfx}">✓ Yes, ${h} min${h===1?'':`s`}</button><button class="btn btn-sm btn-primary" data-sw-hrs="${pfx}" data-hrs="${h*60}">Switch to ${h*60} min (${h} hr${h>1?'s':''})</button></div></div>`;}
-function renderFriends(){const ol=getOrderedLocs(S.locations);const pCnt=S.locations.filter(l=>!["P","PS"].includes(l.type)).length;const canAdd=pCnt<MAX_PERSONAL;const m=parseInt(S.friendMins);const hasFormContent=!!(S.friendName.trim()||S.friendMins);const csNeed=S.friendRel==='roommates_parents'||((S.friendRel==='friend'||S.friendRel==='partner')&&m>60);return`<div class="card"><div class="step-lbl">Step 2 of 4 — Friends &amp; Family</div><div class="step-prog"><div class="step-prog-fill" style="width:50%"></div></div><div class="card-title" style="font-size:21px">Friends &amp; Family</div><div class="card-subtitle">Add people whose home you could go to. <strong>At least one must be 1+ hour away.</strong></div>${renderLocList(ol,true)}${canAdd?`<div class="indent indent-dash"><div class="fgroup"><label class="flabel">Add a Person or Place</label><select class="fselect" id="fRel"><option value="friend" ${S.friendRel==='friend'?'selected':''}>Friend</option><option value="partner" ${S.friendRel==='partner'?'selected':''}>Partner</option><option value="family" ${S.friendRel==='family'?'selected':''}>Family</option><option value="roommates_parents" ${S.friendRel==='roommates_parents'?'selected':''}>Roommate's Parents</option></select></div><div class="fgroup"><label class="flabel">Name or relationship</label><input class="finput" id="fName" placeholder="${S.friendRel==='family'?'e.g. Parents, Brother':'e.g. Alex'}" value="${esc(S.friendName)}">${S.errors.friendName?`<div class="err">${esc(S.errors.friendName)}</div>`:''}</div><div class="fgroup"><label class="flabel">Travel time from home (minutes)</label><input class="finput" id="fMins" type="number" placeholder="e.g. 120" value="${esc(S.friendMins)}">${S.errors.friendMins?`<div class="err">${esc(S.errors.friendMins)}</div>`:''} ${isSusSmall(S.friendMins)&&!S.friendMinsConf?minsWarn('friend',S.friendMins):''}</div>${csNeed?`<div style="display:flex;gap:9px"><div class="fgroup" style="flex:1"><label class="flabel">City</label><input class="finput" id="fCity" placeholder="City" value="${esc(S.friendCity)}">${S.errors.friendCity?`<div class="err">${esc(S.errors.friendCity)}</div>`:''}</div><div class="fgroup" style="width:76px"><label class="flabel">State</label><input class="finput" id="fState" placeholder="ST" maxlength="2" value="${esc(S.friendState)}">${S.errors.friendState?`<div class="err">${esc(S.errors.friendState)}</div>`:''}</div></div>`:''}${hasFormContent?`<button class="btn btn-sm btn-primary" id="btnAddFriend" style="width:100%;margin-top:4px;background:var(--blue-dark);box-shadow:0 2px 8px rgba(44,74,110,.3)">+ Add Person / Place</button>`:`<button class="btn btn-sm btn-outline" id="btnAddFriend" style="width:100%;margin-top:4px;border-color:var(--blue);color:var(--blue-dark)">+ Add Person / Place</button>`}</div>`:''}${pCnt>=MAX_PERSONAL?`<div class="success-box">✓ All 5 personal locations filled. Continue to add your public location.</div>`:''}<div class="btn-row"><button class="btn btn-outline" id="btnFrBack">← Back</button><button class="btn ${hasFormContent?'btn-outline':'btn-primary'}" id="btnFrNext" style="${hasFormContent?'color:var(--text-mid);':'background:#1A5240;box-shadow:0 2px 8px rgba(26,82,64,.25);'}">✓ Done — Next: Public Location →</button></div></div>`;}
+function renderFriends(){const ol=getOrderedLocs(S.locations);const pCnt=S.locations.filter(l=>!["P","PS"].includes(l.type)).length;const canAdd=pCnt<MAX_PERSONAL;const m=parseInt(S.friendMins);const hasFormContent=!!(S.friendName.trim()||S.friendMins);const csNeed=S.friendRel==='roommates_parents'||((S.friendRel==='friend'||S.friendRel==='partner')&&m>60);return`<div class="card"><div class="step-lbl">Step 2 of 4 — Friends &amp; Family</div><div class="step-prog"><div class="step-prog-fill" style="width:50%"></div></div><div class="card-title" style="font-size:21px">Friends &amp; Family</div><div class="card-subtitle">Add people whose home you could go to. <strong>At least one must be 1+ hour away.</strong></div>${renderLocList(ol,true)}${canAdd?`<div class="indent indent-dash"><div class="fgroup"><label class="flabel">Add a Person or Place</label><select class="fselect" id="fRel"><option value="friend" ${S.friendRel==='friend'?'selected':''}>Friend</option><option value="partner" ${S.friendRel==='partner'?'selected':''}>Partner</option><option value="family" ${S.friendRel==='family'?'selected':''}>Family</option><option value="roommates_parents" ${S.friendRel==='roommates_parents'?'selected':''}>Roommate's Parents</option></select></div><div class="fgroup"><label class="flabel">Name or relationship</label><input class="finput" id="fName" placeholder="${S.friendRel==='family'?'e.g. Parents, Brother':'e.g. Alex'}" value="${esc(S.friendName)}">${S.errors.friendName?`<div class="err">${esc(S.errors.friendName)}</div>`:''}</div><div class="fgroup"><label class="flabel">Travel time from home (minutes)</label><input class="finput" id="fMins" type="number" placeholder="e.g. 120" value="${esc(S.friendMins)}">${S.errors.friendMins?`<div class="err">${esc(S.errors.friendMins)}</div>`:''} ${isSusSmall(S.friendMins)&&!S.friendMinsConf?minsWarn('friend',S.friendMins):''}</div>${csNeed?`<div style="display:flex;gap:9px"><div class="fgroup" style="flex:1"><label class="flabel">City</label><input class="finput" id="fCity" placeholder="City" value="${esc(S.friendCity)}">${S.errors.friendCity?`<div class="err">${esc(S.errors.friendCity)}</div>`:''}</div><div class="fgroup" style="width:76px"><label class="flabel">State</label><input class="finput" id="fState" placeholder="ST" maxlength="2" value="${esc(S.friendState)}">${S.errors.friendState?`<div class="err">${esc(S.errors.friendState)}</div>`:''}</div></div>`:''}${hasFormContent?`<button class="btn btn-sm btn-primary" id="btnAddFriend" style="width:100%;margin-top:4px;background:var(--blue-dark);box-shadow:0 2px 8px rgba(44,74,110,.3)">+ Add Person / Place</button>`:`<button class="btn btn-sm btn-outline" id="btnAddFriend" style="width:100%;margin-top:4px;border-color:var(--blue);color:var(--blue-dark)">+ Add Person / Place</button>`}</div>`:''}${pCnt>=MAX_PERSONAL?`<div class="success-box">✓ All 5 personal locations filled. Continue to add your public location.</div>`:''}<div class="btn-row"><button class="btn btn-outline" id="btnFrBack">← Back</button><button class="btn ${hasFormContent?'btn-outline':'btn-primary'}" id="btnFrNext" style="color:var(--text-mid);">Continue to Public Location →</button></div><div class="warn-box" style="margin-top:8px">⚠️ You'll add a nearby public location on the next step before finishing.</div></div>`;}
 function renderPublicLoc(){const ol=getOrderedLocs(S.locations);const personalCount=S.locations.filter(l=>!["P","PS"].includes(l.type)).length;const posNum=personalCount+1;const ordSuffix=['st','nd','rd'][posNum-1]||'th';return`<div class="card"><div class="step-lbl">Step 3 of 4 — Public Location</div><div class="step-prog"><div class="step-prog-fill" style="width:75%"></div></div><div class="card-title" style="font-size:21px">Public Location</div><div class="card-subtitle">A nearby public place as a useful fallback — your ${posNum}${ordSuffix} and final location.</div>${renderLocList(ol,true)}${['building','shelter'].map(o=>`<button class="opt ${S.pubType===o?'sel':''}" data-pt="${o}">${o==='building'?'🏛️ Public Building':'⛺ Public Shelter'}</button>`).join('')}${S.pubType==='building'?`<div class="fgroup" style="margin-top:4px"><label class="flabel">Building type</label><select class="fselect" id="bldType">${["Community center","Library","Large office building","Hotel lobby","Hospital waiting area","School building","Shopping mall","Large church","Other"].map(t=>`<option ${S.buildingType===t?'selected':''}>${t}</option>`).join('')}</select></div>`:''}<div class="fgroup" style="margin-top:14px"><label class="flabel">Approximate travel time from home (minutes)</label><input class="finput" id="pubMins" type="number" placeholder="e.g. 10" value="${esc(S.pubMins)}">${isSusSmall(S.pubMins)&&!S.pubMinsConf?minsWarn('pub',S.pubMins):''}</div>${S.errors.pub?`<div class="err">${esc(S.errors.pub)}</div>`:''}<div class="btn-row"><button class="btn btn-outline" id="btnPubBack">← Back</button><button class="btn btn-primary" id="btnPubNext">Next →</button></div></div>`;}
 
 /* FIX: Back from Review goes to 'friends' so user can add a far-away contact */
@@ -1570,12 +1914,12 @@ function renderFinal(){
     <div style="text-align:center;font-size:40px;margin-bottom:10px">🤖</div>
     <div style="text-align:center;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:4px">Step 1 of 2</div>
     <div class="card-title" style="text-align:center;margin-bottom:6px">Save Your AI Query Prompt to Your Phone</div>
-    <div style="font-size:13px;color:var(--text-mid);text-align:center;line-height:1.6;margin-bottom:20px">A preloaded query you save to your phone now and use later — when something unexpected happens.</div>
+    <div style="font-size:13px;color:var(--text-mid);text-align:center;line-height:1.6;margin-bottom:20px">Save this file to your phone now. When something unexpected happens, attach it to Claude, Gemini, or ChatGPT to get an instant situational report.</div>
 
     <div style="background:var(--green-light);border:2px solid #9EC8B4;border-radius:12px;padding:14px 16px;margin-bottom:12px">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#1A5240;margin-bottom:8px">⬇ Step 1 — Do This Now</div>
       <div style="font-size:13px;font-weight:700;color:#1A5240;margin-bottom:6px">Download and save the query to your phone.</div>
-      <div style="font-size:12px;color:#1A5240;line-height:1.65">Tap the button below. When the file opens, save it somewhere easy to find — your Home Screen, a folder called <strong>Emergency</strong>, or iCloud / Google Drive. That's all you need to do right now.</div>
+      <div style="font-size:12px;color:#1A5240;line-height:1.65">Tap the button below. A share sheet will appear — tap <strong>Save to Files</strong> to store it on your phone, or send it to yourself via <strong>Notes</strong> or email so you can find it in an emergency. That's all you need to do right now.</div>
     </div>
 
     <div style="background:var(--blue-light);border:2px solid #4A6FA5;border-radius:12px;padding:14px 16px;margin-bottom:18px">
@@ -1595,7 +1939,7 @@ function renderFinal(){
     <button class="btn btn-primary" id="btnDownloadAI" style="width:100%;font-size:15px;padding:14px;border-radius:12px;background:#2C4A6E;box-shadow:0 3px 12px rgba(44,74,110,.3);margin-bottom:10px">
       📤 Save AI Query to Phone
     </button>
-    ${S.aiDownloaded?`<div style="background:var(--green-light);border:1.5px solid #9EC8B4;border-radius:9px;padding:9px 13px;font-size:12px;color:#1A5240;font-weight:600;text-align:center;margin-bottom:14px">✓ Saved! Find it in your Files app → Downloads. In an emergency: open Claude, Gemini, or ChatGPT → tap the attachment icon → select this file</div>`:`<div style="font-size:11px;color:var(--text-light);text-align:center;margin-bottom:14px">On iPhone: choose an app to send it to directly (Claude, Gemini, etc.), or tap <strong>Save to Files</strong> to store it</div>`}
+    ${S.aiDownloaded?`<div style="background:var(--green-light);border:1.5px solid #9EC8B4;border-radius:9px;padding:9px 13px;font-size:12px;color:#1A5240;font-weight:600;text-align:center;margin-bottom:14px">✓ File shared! Find it in your Files app or Notes. In an emergency: open Claude, Gemini, or ChatGPT → tap the attachment icon → select this file.</div>`:`<div style="font-size:11px;color:var(--text-light);text-align:center;margin-bottom:14px">A share sheet will appear — tap <strong>Save to Files</strong> to keep it on your phone, or send via <strong>Notes</strong> or email. Options shown depend on the apps installed on your device.</div>`}
     <div style="border-top:1px solid var(--border);padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px">
       <div style="font-size:11px;color:var(--text-light)">Version: ${aiDate}</div>
       <button class="btn btn-primary" id="btnFinalAINext" style="background:#1A5240;box-shadow:0 2px 8px rgba(26,82,64,.25)">Next: Your Other Documents →</button>
@@ -1803,7 +2147,6 @@ IMPORTANT: This template is for informational use only. Not an emergency service
     try{
       await navigator.share({
         title:'AI Situational Analysis — Safety Reserve',
-        text:'Your AI Real Time Situational Analysis prompt. Attach this file to Claude, Gemini, or ChatGPT.',
         files:[file]
       });
       S.aiDownloaded=true;render();
@@ -2001,6 +2344,7 @@ function attachHandlers(){
     const entered=(S.resumeCodeInput||'').trim().toUpperCase();
     const saved=(S.activationCode||'').trim().toUpperCase();
     if(!entered){S.resumeCodeErr='Please enter your activation code.';render();return;}
+    if(entered.length!==6){S.resumeCodeErr='Activation codes are 6 characters. Please check and try again.';render();return;}
     if(entered!==saved){S.resumeCodeErr='Incorrect code. Please check and try again.';render();return;}
     S.resumeCodeErr='';loadSavedMainState();S.appFlow='main';render();
   });
@@ -2058,6 +2402,15 @@ function attachHandlers(){
   bc('btnSRContinue',()=>{if(S.fromFinal){S.fromFinal=false;S.phase=4;render();}else{S.phase=2;render();}});
   document.querySelectorAll('.comm-input,.comm-phone').forEach(el=>{['input','change'].forEach(ev=>el.addEventListener(ev,()=>{const k=el.dataset.ck,f=el.dataset.cf;S.commContacts[k][f]=el.value;if(f==='phone'){const err=validatePhone(el.value);S.commPhoneErrs={...S.commPhoneErrs,[k]:err};debouncedRender(600);}else{/* name: just save, no re-render */}}));});
   bi('commGroup',v=>{S.commGroup=v;});
+  // Fix 3: On Comm Plan, default focus to Name (first field), not Phone
+  (()=>{
+    const nameEl=document.getElementById('ci_primary_name');
+    if(nameEl&&S.phase===2&&!S.fromFinal){
+      // Only auto-focus if all name fields are still empty (first visit to this screen)
+      const allNamesEmpty=!S.commContacts.primary.name&&!S.commContacts.outOfTown.name&&!S.commContacts.localFriend.name;
+      if(allNamesEmpty)setTimeout(()=>{nameEl.focus();},50);
+    }
+  })();
   bc('btnCommBackTopBanner',()=>{S.fromFinal=false;S.phase=4;render();});
   bc('btnEssBackTopBanner',()=>{S.fromFinal=false;S.phase=4;render();});
   bc('btnCommBack',()=>{if(S.fromFinal){S.fromFinal=false;S.phase=4;render();}else{S.phase=1;S.srStep='sr_output';render();}});
@@ -2197,6 +2550,19 @@ function attachHandlers(){
     if(rec)await doPrintCode(rec);
   }));
   bc('btnClearAllCodes',()=>{if(confirm('Delete ALL generated codes and activation records?\n\nThis cannot be undone.')){saveCodes([]);S.codeListFilter='all';S.adminSaveMsg='';render();}});
+  bc('btnExportAppWithCodes',()=>{
+    const _xc=loadCodes(),_xn=new Date();
+    const slim=_xc.filter(r=>!r.cancelled&&new Date(r.expiresAt)>_xn).map(r=>({code:r.code,expiresAt:r.expiresAt,cancelled:false}));
+    if(!slim.length){alert('No active codes to bake in. Generate at least one code first.');return;}
+    const src=document.documentElement.outerHTML;
+    const replaced=src.replace(/const BAKED_CODES = \[.*?\];/s,'const BAKED_CODES = '+JSON.stringify(slim)+';');
+    const blob=new Blob([replaced],{type:'text/html'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='index.html';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),3000);
+    S.adminSaveMsg='Exported index.html with '+slim.length+' active code'+(slim.length!==1?'s':'')+' baked in. Upload this file to GitHub Pages.';render();
+  });
   bc('btnExportCodesCSV',()=>{
     const codes=loadCodes();
     if(!codes.length)return;
@@ -2239,13 +2605,23 @@ function attachHandlers(){
    ============================================================= */
 function advQ(ga){const allQs=buildQList(getOrderedLocs(S.locations));let nx=S.qIndex+1;while(nx<allQs.length&&allQs[nx].key==='fuel'){if(ga?.transportation==='No car — bike or transit only')nx++;else break;}if(nx<allQs.length){S.qIndex=nx;S.collAns={};render();}else{S.srStep='sr_output';render();}}
 function handleActivateNext(){
-  const code=S.activationCode.trim();
+  const code=S.activationCode.trim().toUpperCase();
   if(!code){S.activationErr='Please enter your activation code.';render();return;}
+  // Length check — codes are 6 characters
+  if(code.length!==6){S.activationErr='Activation codes are 6 characters. Please check and try again.';render();return;}
+  const hasBaked=BAKED_CODES.length>0;
+  const hasLocal=loadCodes().length>0;
   const rec=getCodeRecord(code);
+  // If codes have been configured (baked or local), the entered code must match one
+  if((hasBaked||hasLocal)&&!rec){
+    S.activationErr='Activation code not recognized. Please check the code on your Safety Reserve card. For help, contact support@jpsutton.com';
+    render();return;
+  }
   if(rec){
     if(rec.cancelled){S.activationErr='This activation code has been cancelled. Please contact the Concierge at concierge@jpsutton.com';render();return;}
     if(new Date()>new Date(rec.expiresAt)){S.activationErr='Your activation code has expired. Please contact the Concierge at concierge@jpsutton.com';render();return;}
   }
+  S.activationCode=code;
   S.appFlow='confirm';S.errors={};saveSession();render();
 }
 function handleConfirmNext(){const errs={};if(!S.userFullName.trim())errs.fullName='Please enter your full name.';if(!S.userEmail.trim())errs.email='Please enter your email address.';else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.userEmail.trim()))errs.email='Please enter a valid email address.';if(Object.keys(errs).length){S.errors=errs;render();return;}S.errors={};if(!S.userName)S.userName=S.userFullName.split(' ')[0];storeRegistration();saveSession();S.appFlow='safety';render();}
@@ -2512,5 +2888,6 @@ body{font-family:'Sora',sans-serif;background:#F2F4F8;min-height:100vh;display:f
 
 
 </script>
-</body>
-</html>
+
+
+</body></html>

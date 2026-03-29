@@ -2549,12 +2549,20 @@ function attachHandlers(){
     if(rec)await doPrintCode(rec);
   }));
   bc('btnClearAllCodes',()=>{if(confirm('Delete ALL generated codes and activation records?\n\nThis cannot be undone.')){saveCodes([]);S.codeListFilter='all';S.adminSaveMsg='';render();}});
-  bc('btnExportAppWithCodes',()=>{
+  bc('btnExportAppWithCodes',async()=>{
     const _xc=loadCodes(),_xn=new Date();
     const slim=_xc.filter(r=>!r.cancelled&&new Date(r.expiresAt)>_xn).map(r=>({code:r.code,expiresAt:r.expiresAt,cancelled:false}));
     if(!slim.length){alert('No active codes to bake in. Generate at least one code first.');return;}
-    const src=document.documentElement.outerHTML;
-    const replaced=src.replace(/const BAKED_CODES = \[.*?\];/s,'const BAKED_CODES = '+JSON.stringify(slim)+';');
+    // Fetch the actual HTML source — far more reliable than outerHTML serialization
+    let rawSrc;
+    try{
+      const resp=await fetch(window.location.href,{cache:'no-store'});
+      rawSrc=await resp.text();
+    }catch(e){
+      alert('Could not fetch page source. Make sure you are on a live https:// URL (not a local file), then try again.');return;
+    }
+    const replaced=rawSrc.replace(/const BAKED_CODES = \[.*?\];/s,'const BAKED_CODES = '+JSON.stringify(slim)+';');
+    if(replaced===rawSrc){alert('Could not find BAKED_CODES placeholder in source. Export failed.');return;}
     const blob=new Blob([replaced],{type:'text/html'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download='index.html';

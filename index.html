@@ -7279,7 +7279,7 @@ function doDownloadDocs(){
   const {srHtml,commHtml,essHtml,disruptionHtml}=build4DocsHtml();
   showPrintStatus(()=>{
     // Use mso-page-break-before for Word page breaks + standard CSS for browsers
-    const pageBreak='<div style="page-break-before:always;mso-page-break-before:always"></div>';
+    const pageBreak='<p style="margin:0;page-break-before:always;mso-page-break-before:always"><span style="font-size:1.0pt;line-height:1.0pt">&nbsp;</span></p>';
     const wordHtml=`<!DOCTYPE html><html ><head><meta charset="UTF-8"><title>Safety Reserve — ${esc(S.userName)}</title><link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet"><style>${PRINT_CSS} body{padding:0}</style></head><body>${srHtml}${pageBreak}${commHtml}${pageBreak}${essHtml}${pageBreak}${disruptionHtml}</body></html>`;
     const blob=new Blob([wordHtml],{type:'text/html;charset=utf-8'});
     const url=URL.createObjectURL(blob);
@@ -7302,7 +7302,7 @@ function doPrintAndDownloadDocs(){
     w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Safety Reserve — ${esc(S.userName)}</title><link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet"><style>${PRINT_CSS}</style></head><body>${wrapSection(srHtml)}${wrapSection(commHtml)}${wrapSection(essHtml)}${wrapSection(disruptionHtml,true)}<script>window.onload=function(){window.print();}<\/script></body></html>`);
     w.document.close();
     // Also trigger download
-    const pageBreak='<div style="page-break-before:always;mso-page-break-before:always"></div>';
+    const pageBreak='<p style="margin:0;page-break-before:always;mso-page-break-before:always"><span style="font-size:1.0pt;line-height:1.0pt">&nbsp;</span></p>';
     const wordHtml=`<!DOCTYPE html><html ><head><meta charset="UTF-8"><title>Safety Reserve — ${esc(S.userName)}</title><link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet"><style>${PRINT_CSS} body{padding:0}</style></head><body>${srHtml}${pageBreak}${commHtml}${pageBreak}${essHtml}${pageBreak}${disruptionHtml}</body></html>`;
     const blob=new Blob([wordHtml],{type:'text/html;charset=utf-8'});
     const url=URL.createObjectURL(blob);

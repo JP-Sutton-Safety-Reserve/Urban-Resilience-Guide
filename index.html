@@ -7085,7 +7085,12 @@ function buildDisruptionInsightsHTML(){
   let text=getDisruptionHtml()||DISRUPTION_INSIGHTS_DEFAULT;
   if(text.startsWith('__HTML__:'))text=text.slice(9);
   /* If the stored content is HTML (user pasted HTML, same as AI Query approach) use it directly */
-  if(/<[a-zA-Z]/.test(text))return text;
+  if(/<[a-zA-Z]/.test(text)){
+    // Strip outer html/head/body wrappers that cause blank-page issues when embedded inline
+    const bodyMatch=text.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    if(bodyMatch)return bodyMatch[1];
+    return text.replace(/<html[^>]*>/i,'').replace(/<\/html>/i,'').replace(/<head[\s\S]*?<\/head>/i,'').replace(/<body[^>]*>/i,'').replace(/<\/body>/i,'');
+  }
   /* Otherwise parse pipe format */
   const lines=text.split('\n');
   let html='';
@@ -7094,7 +7099,7 @@ function buildDisruptionInsightsHTML(){
   for(const line of lines){
     const t=line.trim();
     if(!t)continue;
-    if(t.startsWith('TITLE|')){/* handled by parent */}
+    if(t.startsWith('TITLE|')){html+=`<h1 style="font-family:'DM Serif Display',serif;font-size:22px;color:#2C3347;margin-bottom:3px">${esc(t.slice(6))}</h1>`;}
     else if(t.startsWith('INTRO|')){html+=`<p style="font-size:12px;color:#5A6270;line-height:1.65;margin-bottom:14px">${esc(t.slice(6))}</p>`;}
     else if(t.startsWith('CARD|')){
       closeCard();
@@ -7188,8 +7193,7 @@ function build4DocsHtml(){
   const _PAGE_BREAK_MARKER='<div style="page-break-before:always;break-before:page;height:0"></div>';
   const _disParts=_disruptionBody.split(_PAGE_BREAK_MARKER);
   const disruptionHtml=_disParts.map((part,i)=>{
-    const header=i===0?`<h1 style="font-family:'DM Serif Display',serif;font-size:22px;color:#2C3347;margin-bottom:3px">Disruption Insights (Selected Examples)</h1><p style="font-size:12px;color:#8E95A3;margin-bottom:14px">Representative examples of unusual events</p>`:'';
-    return`<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact">${_brand('Disruption Insights')}<div style="padding:16px 18px">${header}${part}</div></div>`;
+    return`<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact">${_brand('Disruption Insights')}<div style="padding:16px 18px">${part}</div></div>`;
   }).join('<div style="page-break-before:always;break-before:page"></div>');
   return{srHtml,commHtml,essHtml,disruptionHtml};
 }
@@ -7889,10 +7893,10 @@ body{font-family:'Sora',sans-serif;background:#F2F4F8;min-height:100vh;display:f
 
 /* Visual + code side by side */
 .qr-code-row{display:flex;gap:18px;align-items:flex-start;margin-bottom:16px}
-.visual-box{flex-shrink:0;width:150px;height:150px;border-radius:12px;border:2px solid #C8D4E8;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(44,74,110,.12);padding:4px}.visual-box img{width:100%;height:100%;display:block}
+.visual-box{flex-shrink:0;width:150px;height:150px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;padding:4px}.visual-box img{width:100%;height:100%;display:block}
 .code-side{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px}
 .code-eyebrow{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8E95A3;margin-bottom:3px}
-.code-box{background:white;border:2.5px solid #2C4A6E;border-radius:12px;padding:12px 16px;display:inline-block;box-shadow:0 2px 12px rgba(44,74,110,.14)}
+.code-box{background:white;border-radius:12px;padding:12px 16px;display:inline-block}
 .code-val{font-size:26px;font-weight:800;color:#2C4A6E;letter-spacing:.18em;font-family:'Sora',sans-serif}
 .steps-list{display:flex;flex-direction:column;gap:5px}
 .step-line{display:flex;align-items:center;gap:7px;font-size:11px;color:#3A4560;line-height:1.4}

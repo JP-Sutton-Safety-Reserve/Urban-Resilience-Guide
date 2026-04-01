@@ -5770,10 +5770,10 @@ function getCodeRecord(code){
   if(baked)return baked;
   return null;
 }
-function getNextUnusedCode(){
+function getNextUnusedCode(excludeCode){
   const now=new Date();
   const all=loadCodes();
-  return all.find(r=>!r.cancelled&&!r.orderNumber&&(!r.activations||r.activations.length===0)&&new Date(r.expiresAt)>now)||null;
+  return all.find(r=>!r.cancelled&&!r.orderNumber&&(!r.activations||r.activations.length===0)&&new Date(r.expiresAt)>now&&r.code!==excludeCode)||null;
 }
 function freshNewCode(){
   const _next=getNextUnusedCode();
@@ -7560,7 +7560,7 @@ function attachHandlers(){
     _adminLayer._newCodeBound=true;
     _adminLayer.addEventListener('click',e=>{
       if(e.target.closest('#btnGenNewCode')){
-        const _next=getNextUnusedCode();
+        const _next=getNextUnusedCode(S.newCodeStr);
         S.newCodeStr=_next?_next.code:genCodeStr();
         S.newOrderNumber='';
         S.newCodeQrUrl=getBaseUrl()+'?code='+S.newCodeStr;
@@ -7630,8 +7630,8 @@ function attachHandlers(){
     saveCodes(_all);
     S.adminSaveMsg='Code '+rec.code+(rec.orderNumber?' (Order #'+rec.orderNumber+')':'')+' saved.';
     const _saved=JSON.parse(JSON.stringify(rec));
-    // Advance to next unused code from pool
-    const _next=getNextUnusedCode();
+    // Advance to next unused code from pool (exclude the one just saved)
+    const _next=getNextUnusedCode(S.newCodeStr);
     S.newCodeStr=_next?_next.code:genCodeStr();
     S.newOrderNumber='';
     S.newCodeQrUrl=getBaseUrl()+'?code='+S.newCodeStr;

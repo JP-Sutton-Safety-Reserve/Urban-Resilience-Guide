@@ -1,7 +1,7 @@
 <html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Safety Reserve — Urban Resilience Guide v23</title>
+<title>Safety Reserve — Urban Resilience Guide v24</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&amp;family=DM+Serif+Display&amp;display=swap" rel="stylesheet">
 <style>
 :root {
@@ -79,7 +79,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-he
 /* OPTION BUTTONS */
 .opt{display:block;width:100%;padding:13px 17px;min-height:48px;border:1.5px solid var(--border);border-radius:10px;background:white;font-size:13px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;text-align:left;transition:all .15s;color:var(--text);margin-bottom:9px;line-height:1.4;-webkit-tap-highlight-color:transparent}
 .opt:last-child{margin-bottom:0}
-.opt:hover,.opt.sel{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
+.opt.sel{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
+@media(hover:hover){.opt:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}}
 
 /* LOC LIST */
 .loc-wrap{border:1.5px solid var(--blue);border-radius:10px;overflow:hidden;margin-bottom:14px}
@@ -124,7 +125,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-he
 .multi-head{padding:9px 13px;display:flex;align-items:center;gap:8px;border-bottom:1.5px solid var(--border)}
 .multi-opts{display:flex;flex-direction:column;gap:9px;padding:11px 13px}
 .mini-opt{display:block;width:100%;padding:11px 14px;min-height:44px;border:1.5px solid var(--border);border-radius:8px;background:white;font-size:13px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;text-align:left;transition:all .15s;color:var(--text);-webkit-tap-highlight-color:transparent}
-.mini-opt:hover,.mini-opt.sel{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
+.mini-opt.sel{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
+@media(hover:hover){.mini-opt:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}}
 
 /* OUTPUT */
 .ref-wrap{background:var(--bg);min-height:100vh;padding:18px;width:100%}
@@ -7213,26 +7215,14 @@ IMPORTANT: This template is for informational use only. Not an emergency service
 ` + rawText;
 
   const blob=new Blob([fileContent],{type:'text/plain'});
-  const file=new File([blob],fileName,{type:'text/plain'});
 
-  // On iOS/Android only: show native share sheet — user can attach directly to Claude, Gemini, etc.
-  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if(isMobile && navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-    try{
-      await navigator.share({
-        title:'AI Situational Analysis — Safety Reserve',
-        files:[file]
-      });
-      S.aiDownloaded=true;render();
-      return;
-    }catch(e){
-      if(e.name==='AbortError')return; // user cancelled share sheet — do nothing
-      // Share failed — fall through to download
-    }
-  }
-
-  // Desktop fallback: show content in a copy-to-clipboard overlay — no file download
-  showAIQueryCopyPanel(fileContent);
+  // Direct download on all platforms — navigator.share({files}) on iOS auto-saves the file
+  // to Downloads AND opens the share sheet, resulting in two stored copies. Direct download
+  // avoids this by creating exactly one file in the user's Downloads / Files app.
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=fileName;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
   S.aiDownloaded=true;render();
 }
 
@@ -7273,7 +7263,8 @@ function doPrintAll(){
   showPrintStatus(()=>{
     const w=window.open('','_blank','width=1000,height=800');
     if(!w){alert('Pop-up blocked. Please allow pop-ups for this site and try again.');return;}
-    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Safety Reserve — ${esc(S.userName)}</title><link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet"><style>${PRINT_CSS}</style></head><body>${wrapSection(srHtml)}${wrapSection(commHtml)}${wrapSection(essHtml)}${wrapSection(disruptionHtml,true)}<script>window.onload=function(){window.print();}<\/script></body></html>`);
+    const _DIS_SEP='<div style="page-break-before:always;break-before:page"></div>';const _disPW=disruptionHtml.split(_DIS_SEP);const _disWrapped=_disPW.map((p,i)=>wrapSection(p,i===_disPW.length-1)).join('');
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Safety Reserve — ${esc(S.userName)}</title><link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet"><style>${PRINT_CSS}</style></head><body>${wrapSection(srHtml)}${wrapSection(commHtml)}${wrapSection(essHtml)}${_disWrapped}<script>window.onload=function(){window.print();}<\/script></body></html>`);
     w.document.close();
     S.docsActioned=true;S.docsActionType='print';render();
   });
@@ -7306,7 +7297,8 @@ function doPrintAndDownloadDocs(){
     // Open print window
     const w=window.open('','_blank','width=1000,height=800');
     if(!w){alert('Pop-up blocked. Please allow pop-ups for this site and try again.');return;}
-    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Safety Reserve — ${esc(S.userName)}</title><link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet"><style>${PRINT_CSS}</style></head><body>${wrapSection(srHtml)}${wrapSection(commHtml)}${wrapSection(essHtml)}${wrapSection(disruptionHtml,true)}<script>window.onload=function(){window.print();}<\/script></body></html>`);
+    const _DIS_SEP2='<div style="page-break-before:always;break-before:page"></div>';const _disPW2=disruptionHtml.split(_DIS_SEP2);const _disWrapped2=_disPW2.map((p,i)=>wrapSection(p,i===_disPW2.length-1)).join('');
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Safety Reserve — ${esc(S.userName)}</title><link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet"><style>${PRINT_CSS}</style></head><body>${wrapSection(srHtml)}${wrapSection(commHtml)}${wrapSection(essHtml)}${_disWrapped2}<script>window.onload=function(){window.print();}<\/script></body></html>`);
     w.document.close();
     // Also trigger download
     const pageBreak='<div style="page-break-before:always;break-before:page;height:0"></div>';

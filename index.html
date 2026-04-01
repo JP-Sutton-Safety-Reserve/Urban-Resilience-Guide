@@ -7246,10 +7246,10 @@ function showAIQueryCopyPanel(text){
   overlay.querySelector('#btnCloseAIPanel').addEventListener('click',()=>overlay.remove());
   overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
 }
-const PRINT_CSS=`*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{font-family:'Sora',sans-serif;background:white}@page{margin:0.5in;size:letter portrait}.page-section{page-break-after:always;height:10in;overflow:hidden}`;
-const DOWNLOAD_CSS=`*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{font-family:'Sora',sans-serif;background:white}@page{margin:0.15in!important;size:letter portrait}.page-section{page-break-after:always;height:10.7in;overflow:hidden}`;
+const PRINT_CSS=`*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{font-family:'Sora',sans-serif;background:white}@page{margin:0.5in;size:letter portrait}.page-section{page-break-after:always;break-after:page}.page-section:last-child{page-break-after:auto;break-after:auto}`;
+const DOWNLOAD_CSS=`*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{font-family:'Sora',sans-serif;background:white}@page{margin:0.15in!important;size:letter portrait}.page-section{page-break-after:always;break-after:page}.page-section:last-child{page-break-after:auto;break-after:auto}`;
 
-/* Wrap each doc in a page-section div — height+overflow:hidden hard-caps to one page on any device */
+/* Wrap each doc in a page-section div — break-after:page ensures each section starts on a new page */
 function wrapSection(html){return`<div class="page-section" style="-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important">${html}</div>`;}
 
 /* Print 4 docs — each section on its own page */

@@ -7554,17 +7554,22 @@ function attachHandlers(){
     }
   });
 
-  /* CODE GENERATOR */
-  bc('btnGenNewCode',()=>{
-    // Pull next unused code from pool (or generate if pool empty)
-    const _next=getNextUnusedCode();
-    S.newCodeStr=_next?_next.code:genCodeStr();
-    S.newOrderNumber='';
-    S.newCodeQrUrl=getBaseUrl()+'?code='+S.newCodeStr;
-    S.newCodeAdminText=load(SK.activationCardTemplate,ACTIVATION_CARD_TEMPLATE_DEFAULT);
-    const _img=load(SK.codeImage,'');S.newCodeImageData=_img||null;
-    S.adminSaveMsg='';render();
-  });
+  /* CODE GENERATOR — delegated so it survives re-renders */
+  const _adminLayer=document.getElementById('adminLayer');
+  if(_adminLayer&&!_adminLayer._newCodeBound){
+    _adminLayer._newCodeBound=true;
+    _adminLayer.addEventListener('click',e=>{
+      if(e.target.closest('#btnGenNewCode')){
+        const _next=getNextUnusedCode();
+        S.newCodeStr=_next?_next.code:genCodeStr();
+        S.newOrderNumber='';
+        S.newCodeQrUrl=getBaseUrl()+'?code='+S.newCodeStr;
+        S.newCodeAdminText=load(SK.activationCardTemplate,ACTIVATION_CARD_TEMPLATE_DEFAULT);
+        const _img=load(SK.codeImage,'');S.newCodeImageData=_img||null;
+        S.adminSaveMsg='';render();
+      }
+    });
+  }
   const _ciiEl=document.getElementById('codeImageUpload');
   if(_ciiEl)_ciiEl.addEventListener('change',e=>{
     const f=e.target.files[0];if(!f)return;
